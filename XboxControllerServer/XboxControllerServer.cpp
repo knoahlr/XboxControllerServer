@@ -33,6 +33,7 @@ void::XboxControllerServer::getControllerState(void) {
 	int INPUT_DEADZONE = 65335;
 	int controllerCount = 1;
 
+	startListener();
 	for (DWORD i = 0; i < XUSER_MAX_COUNT && i < controllerCount; i++)
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -47,7 +48,7 @@ void::XboxControllerServer::getControllerState(void) {
 					QString::number(state.Gamepad.bRightTrigger), QString::number(state.Gamepad.bLeftTrigger)));		
 		}
 	}
-
+	
 }
 
 void::XboxControllerServer::logSlot(QString message)
@@ -55,6 +56,24 @@ void::XboxControllerServer::logSlot(QString message)
 
 	logBox->appendPlainText(message);
 
+}
+void::XboxControllerServer::startListener(void) 
+{
+	Listener = new QThread();
+	gamepads = new ControllerMonitor(0);
+	gamepads->moveToThread(Listener);
+	connect(this, SIGNAL(monitor()), gamepads, SLOT(gamepads.startMonitor()));
+	connect(gamepads, SIGNAL(gamepads.ControllerUpdate(Controller newState)), this, SLOT(handleNewState(Controller newState)));
+	Listener->start();
+	emit SIGNAL(monitor());
+}
+
+void::XboxControllerServer::handleNewState(Controller *newState)
+{
+	logSlot(QString("Right Analog: %1, %2\nLeft Analog: %3, %4")\
+	.arg(QString::number(newState->RightAnalog.X), QString::number(newState->RightAnalog.Y),\
+		QString::number(newState->LeftAnalog.X), QString::number(newState->LeftAnalog.Y)));
+	logSlot(QString("BlahBLahBLah"));
 }
 
 

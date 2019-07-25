@@ -60,8 +60,10 @@
     <ClInclude Include="XboxControllerServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerMonitor.h">
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="ControllerMonitor.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </CustomBuild>
   </ItemGroup>
 </Project>
