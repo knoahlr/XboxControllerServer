@@ -6,7 +6,6 @@
 #include <QtWidgets>
 #include <QHBoxLayout> 
 #include "StatusBar.h"
-//#include <boost/log/trivial.hpp>
 #include <QtGamepad/qgamepad.h>
 #include <qglobal.h>
 #include <QtCore/qlogging.h>
@@ -16,7 +15,7 @@
 
 class XboxControllerServer : public QMainWindow
 {
-	Q_OBJECT
+
 
 public:
 	XboxControllerServer(QWidget *parent = Q_NULLPTR);

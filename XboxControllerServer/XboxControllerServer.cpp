@@ -41,38 +41,10 @@ void::XboxControllerServer::getControllerState(void) {
 		dwResult = XInputGetState(i, &state);
 		if (dwResult == ERROR_SUCCESS)
 		{
-			float LX = state.Gamepad.sThumbLX;
-			float LY = state.Gamepad.sThumbLY;
-
-			//determine how far the controller is pushed
-			float magnitude = sqrt(LX*LX + LY * LY);
-
-			//determine the direction the controller is pushed
-			float normalizedLX = LX / magnitude;
-			float normalizedLY = LY / magnitude;
-
-			float normalizedMagnitude = 0;
-
-			//check if the controller is outside a circular dead zone
-			if (magnitude > INPUT_DEADZONE)
-			{
-				//clip the magnitude at its expected maximum value
-				if (magnitude > 32767) magnitude = 32767;
-
-				//adjust magnitude relative to the end of the dead zone
-				magnitude -= INPUT_DEADZONE;
-
-				//optionally normalize the magnitude with respect to its expected range
-				//giving a magnitude value of 0.0 to 1.0
-				normalizedMagnitude = magnitude / (32767 - INPUT_DEADZONE);
-				logSlot(QString::fromStdString(std::string("%d", normalizedMagnitude)));
-			}
-			else //if the controller is in the deadzone zero out the magnitude
-			{
-				logSlot(QString("%1, %2").arg(QString::number(LX), QString::number(LY)));
-				magnitude = 0.0;
-				normalizedMagnitude = 0.0;
-			}
+			logSlot(QString("Left Analog:%1 ,%2 Right Analog:%3, %4\n Right and Left Trigger:%5, %6")\
+				.arg (QString::number(state.Gamepad.sThumbLX), QString::number(state.Gamepad.sThumbLY), \
+					QString::number(state.Gamepad.sThumbRX), QString::number(state.Gamepad.sThumbRY),\
+					QString::number(state.Gamepad.bRightTrigger), QString::number(state.Gamepad.bLeftTrigger)));		
 		}
 	}
 

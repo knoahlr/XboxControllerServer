@@ -39,11 +39,9 @@
     <ClCompile Include="StatusBar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="XboxControllerServer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <ClCompile Include="ControllerMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="XboxControllerServer.ui">
@@ -57,6 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StatusBar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XboxControllerServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerMonitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

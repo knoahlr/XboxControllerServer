@@ -53,7 +53,7 @@
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_DATAVISUALIZATION_LIB;QT_GAMEPAD_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALPORT_LIB;QT_WEBSOCKETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets;C:\Program Files\custom_noah_P_PR\boost_1_69_0\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -113,12 +113,14 @@
     </QtRcc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ControllerMonitor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StatusBar.cpp" />
     <ClCompile Include="XboxControllerServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="XboxControllerServer.h" />
+    <ClInclude Include="ControllerMonitor.h" />
+    <ClInclude Include="XboxControllerServer.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="XboxControllerServer.ui" />
