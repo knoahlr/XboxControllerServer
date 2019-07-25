@@ -1,11 +1,18 @@
 #pragma once
+#pragma comment(lib, "XInput.lib")
 
 #include <QtWidgets/QMainWindow>
 #include <QtGui>
 #include <QtWidgets>
 #include <QHBoxLayout> 
 #include "StatusBar.h"
-//#include "ui_XboxControllerServer.h"
+//#include <boost/log/trivial.hpp>
+#include <QtGamepad/qgamepad.h>
+#include <qglobal.h>
+#include <QtCore/qlogging.h>
+#include <QMessageLogger>
+#include <Xinput.h>
+
 
 class XboxControllerServer : public QMainWindow
 {
@@ -21,24 +28,17 @@ public:
 	DefaultStatusBar *statusBar;
 
 	//GroupBoxes 
-	QGroupBox *rootFolderGroupBox;
-	QGroupBox  *archiveFolderGroupBox;
-	QGroupBox *archiveButtonGroupBox;
-	QFormLayout *rootFolderGroupBoxLayout;
-	QFormLayout *archiveFolderGroupBoxLayout;
-	QVBoxLayout *archiveButtonLayout;
+	QGroupBox *logGroupBox;
+	QVBoxLayout *logFrameLayout;
+	
+	QPlainTextEdit *logBox;
+	QPushButton *testMe;
 
+	QGamepad *controller;
 
-	//Push buttons and LineEdits
-	QLineEdit *rootFolderLineEdit;
-	QLineEdit *archiveFolderLineEdit;
-	QPushButton *rootBrowseButton;
-	QPushButton *archiveBrowseButton;
-	QPushButton *archiveButton;
-
-
-
-	void dirCopier(void);
-
-
+public slots:
+	void logSlot(QString message);
+	void getControllerState(void);
+signals:
+	void logSignal(QString message);
 };
