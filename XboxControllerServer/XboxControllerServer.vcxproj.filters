@@ -57,13 +57,16 @@
     <ClInclude Include="StatusBar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XboxControllerServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="ControllerMonitor.h">
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="XboxControllerServer.h">
       <Filter>Header Files</Filter>
-    </CustomBuild>
+    </QtMoc>
+    <QtMoc Include="ControllerMonitor.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

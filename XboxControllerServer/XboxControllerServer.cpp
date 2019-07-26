@@ -1,8 +1,10 @@
 #include "XboxControllerServer.h"
 #include "qgamepad.h"
+
 XboxControllerServer::XboxControllerServer(QWidget *parent)
 	: QMainWindow(parent)
 {
+	controllerDefined = false;
 	centralWidget = new QWidget();
 	centralLayout = new QVBoxLayout();
 	Icon = new QIcon("../Articles/atom.png");
@@ -14,7 +16,7 @@ XboxControllerServer::XboxControllerServer(QWidget *parent)
 
 	logBox = new QPlainTextEdit();
 	logBox->setReadOnly(true);
-	testMe = new QPushButton("Test Me");
+	testMe = new QPushButton("Start Server");
 	connect(testMe, SIGNAL(clicked()), this, SLOT(getControllerState()));
 
 	logFrameLayout->addWidget(logBox);
@@ -37,7 +39,6 @@ void::XboxControllerServer::getControllerState(void) {
 	for (DWORD i = 0; i < XUSER_MAX_COUNT && i < controllerCount; i++)
 	{
 		ZeroMemory(&state, sizeof(XINPUT_STATE));
-
 		// Simply get the state of the controller from XInput.
 		dwResult = XInputGetState(i, &state);
 		if (dwResult == ERROR_SUCCESS)
@@ -48,7 +49,6 @@ void::XboxControllerServer::getControllerState(void) {
 					QString::number(state.Gamepad.bRightTrigger), QString::number(state.Gamepad.bLeftTrigger)));		
 		}
 	}
-	
 }
 
 void::XboxControllerServer::logSlot(QString message)
@@ -59,21 +59,31 @@ void::XboxControllerServer::logSlot(QString message)
 }
 void::XboxControllerServer::startListener(void) 
 {
-	Listener = new QThread();
-	gamepads = new ControllerMonitor(0);
-	gamepads->moveToThread(Listener);
-	connect(this, SIGNAL(monitor()), gamepads, SLOT(gamepads.startMonitor()));
-	connect(gamepads, SIGNAL(gamepads.ControllerUpdate(Controller newState)), this, SLOT(handleNewState(Controller newState)));
-	Listener->start();
-	emit SIGNAL(monitor());
+	if (!controllerDefined)
+	{
+		gamepads = new ControllerMonitor(0);
+		gamepads->moveToThread(&Listener);
+		connect(this, SIGNAL(monitor()), gamepads, SLOT(startMonitor()));
+		connect(gamepads, SIGNAL(ControllerUpdate(Controller*)), this, SLOT(handleNewState(Controller *)));
+		Listener.start();
+		controllerDefined = true;
+	}
+	emit monitor();
 }
 
 void::XboxControllerServer::handleNewState(Controller *newState)
 {
-	logSlot(QString("Right Analog: %1, %2\nLeft Analog: %3, %4")\
+	logSlot(QString("Right Analog: %1, %2\nLeft Analog: %3, %4\nRight Trigger: %5 Left Trigger: %6\nButtons: %7")\
 	.arg(QString::number(newState->RightAnalog.X), QString::number(newState->RightAnalog.Y),\
-		QString::number(newState->LeftAnalog.X), QString::number(newState->LeftAnalog.Y)));
-	logSlot(QString("BlahBLahBLah"));
+		QString::number(newState->LeftAnalog.X), QString::number(newState->LeftAnalog.Y),
+		QString::number(newState->RightTrigger), QString::number(newState->LeftTrigger),
+		QString::number(newState->_buttons)
+		));
+}
+
+void::XboxControllerServer::closeEvent(QCloseEvent *event)
+{
+	Listener.quit();
 }
 
 

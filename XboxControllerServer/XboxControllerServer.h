@@ -9,11 +9,14 @@
 #include <qglobal.h>
 #include <QtCore/qlogging.h>
 #include <QMessageLogger>
+#include <QTcpSocket>
 //#include <Xinput.h>
 #include "ControllerMonitor.h"
 
 class XboxControllerServer : public QMainWindow
 {
+	Q_OBJECT
+	QThread Listener;
 
 public:
 	XboxControllerServer(QWidget *parent = Q_NULLPTR);
@@ -29,9 +32,14 @@ public:
 	QPushButton *testMe;
 
 	//Gamepad Listener
-	QThread *Listener;
 	ControllerMonitor *gamepads;
+	bool controllerDefined;
 	void startListener(void);
+	void closeEvent(QCloseEvent *event);
+
+	//TCP Transmitter and Receiver
+	QTcpSocket *Transmitter;
+	QTcpSocket *Receiver;
 
 public slots:
 	void logSlot(QString message);

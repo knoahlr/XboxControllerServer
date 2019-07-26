@@ -1,5 +1,8 @@
 #include "ControllerMonitor.h"
+#include <thread>
+#include <chrono>
 
+using namespace std::chrono_literals;
 Controller::Controller()
 {
 	RightTrigger = 0;
@@ -12,6 +15,7 @@ Controller::Controller()
 	buttonB = 0;
 	buttonX = 0;
 	buttonY = 0;
+	_buttons = 0;
 }
 void::Controller::setControllerState(XINPUT_GAMEPAD gamepadState) 
 {
@@ -27,7 +31,7 @@ void::Controller::setControllerState(XINPUT_GAMEPAD gamepadState)
 	buttonB = 0;
 	buttonX = 0;
 	buttonY = 0;
-
+	_buttons = gamepadState.wButtons;
 }
 
 
@@ -48,13 +52,14 @@ ControllerMonitor::ControllerMonitor(int user)
 void::ControllerMonitor::startMonitor(void)
 {
 	getStateResult = XInputGetState(Users, &newControllerState);
-	emit SIGNAL(ControllerUpdate(controller));
+	//emit SIGNAL(ControllerUpdate(controller));
 	while (getStateResult == 0)
 	{
 		controller->setControllerState(newControllerState.Gamepad);
 		prevControllerState = newControllerState;
 		getStateResult = XInputGetState(Users, &newControllerState);
-		emit SIGNAL(ControllerUpdate(controller));
+		emit ControllerUpdate(controller);
+		std::this_thread::sleep_for(200ms);
 	}
 }
 

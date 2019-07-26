@@ -9,25 +9,27 @@ class Controller: public QObject
 public:
 	Controller();
 	struct Analog {
-		float X;
-		float Y;
+		BYTE X;
+		BYTE Y;
 	};
 	Analog RightAnalog;
 	Analog LeftAnalog;
-	float RightTrigger;
-	float LeftTrigger;
+	SHORT RightTrigger;
+	SHORT LeftTrigger;
 	float buttonA;
 	float buttonB;
 	float buttonX;
 	float buttonY;
 	float leftButton;
 	float rightButton;
+	WORD _buttons;
 	void setControllerState(XINPUT_GAMEPAD gamepadState);
 };
 
 class ControllerMonitor :public QObject
 {
-	
+	Q_OBJECT
+
 public:
 	ControllerMonitor(int user);
 	XINPUT_STATE newControllerState;

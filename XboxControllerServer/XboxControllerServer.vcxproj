@@ -69,7 +69,7 @@
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets;C:\Program Files\custom_noah_P_PR\boost_1_69_0\;%(AdditionalIncludeDirectories)</IncludePath>
+      <IncludePath>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets</IncludePath>
       <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_DATAVISUALIZATION_LIB;QT_GAMEPAD_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALPORT_LIB;QT_WEBSOCKETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</Define>
     </QtMoc>
     <QtUic>
@@ -100,7 +100,7 @@
     <QtMoc>
       <OutputFile>.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</OutputFile>
       <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
-      <IncludePath>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets;%(AdditionalIncludeDirectories)</IncludePath>
+      <IncludePath>.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtDataVisualization;$(QTDIR)\include\QtGamepad;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtSerialPort;$(QTDIR)\include\QtWebSockets;$(QTDIR)\include\QtWidgets</IncludePath>
       <Define>UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_DATAVISUALIZATION_LIB;QT_GAMEPAD_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_SERIALPORT_LIB;QT_WEBSOCKETS_LIB;QT_WIDGETS_LIB;%(PreprocessorDefinitions)</Define>
     </QtMoc>
     <QtUic>
@@ -119,7 +119,7 @@
     <ClCompile Include="XboxControllerServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="ControllerMonitor.h">
+    <QtMoc Include="ControllerMonitor.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -132,8 +132,8 @@
       </Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </Command>
-    </CustomBuild>
-    <ClInclude Include="XboxControllerServer.h" />
+    </QtMoc>
+    <QtMoc Include="XboxControllerServer.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="XboxControllerServer.ui" />
@@ -143,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StatusBar.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
