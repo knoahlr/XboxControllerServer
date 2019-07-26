@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'XboxControllerServer.ui'
 **
-** Created by: Qt User Interface Compiler version 5.11.1
+** Created by: Qt User Interface Compiler version 5.13.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -30,19 +30,19 @@ public:
     void setupUi(QMainWindow *XboxControllerServerClass)
     {
         if (XboxControllerServerClass->objectName().isEmpty())
-            XboxControllerServerClass->setObjectName(QStringLiteral("XboxControllerServerClass"));
+            XboxControllerServerClass->setObjectName(QString::fromUtf8("XboxControllerServerClass"));
         XboxControllerServerClass->resize(600, 400);
         menuBar = new QMenuBar(XboxControllerServerClass);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setObjectName(QString::fromUtf8("menuBar"));
         XboxControllerServerClass->setMenuBar(menuBar);
         mainToolBar = new QToolBar(XboxControllerServerClass);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         XboxControllerServerClass->addToolBar(mainToolBar);
         centralWidget = new QWidget(XboxControllerServerClass);
-        centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         XboxControllerServerClass->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(XboxControllerServerClass);
-        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
         XboxControllerServerClass->setStatusBar(statusBar);
 
         retranslateUi(XboxControllerServerClass);
@@ -52,7 +52,7 @@ public:
 
     void retranslateUi(QMainWindow *XboxControllerServerClass)
     {
-        XboxControllerServerClass->setWindowTitle(QApplication::translate("XboxControllerServerClass", "XboxControllerServer", nullptr));
+        XboxControllerServerClass->setWindowTitle(QCoreApplication::translate("XboxControllerServerClass", "XboxControllerServer", nullptr));
     } // retranslateUi
 
 };

@@ -116,6 +116,7 @@
     <ClCompile Include="ControllerMonitor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StatusBar.cpp" />
+    <ClCompile Include="TcpClient.cpp" />
     <ClCompile Include="XboxControllerServer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +143,7 @@
     <QtRcc Include="XboxControllerServer.qrc" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="TcpClient.h" />
     <ClInclude Include="StatusBar.h" />
   </ItemGroup>
   <ItemGroup>
