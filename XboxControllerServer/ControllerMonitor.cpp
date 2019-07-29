@@ -17,20 +17,39 @@ Controller::Controller()
 	buttonY = 0;
 	_buttons = 0;
 }
-void::Controller::setControllerState(XINPUT_GAMEPAD gamepadState) 
+void Controller::setControllerState(XINPUT_GAMEPAD gamepadState) 
 {
 	RightTrigger = gamepadState.bRightTrigger;
 	LeftTrigger = gamepadState.bLeftTrigger;
-	rightButton = 0;
-	leftButton = 0;
 	RightAnalog.X = gamepadState.sThumbRX;
 	RightAnalog.Y = gamepadState.sThumbRY;
 	LeftAnalog.X = gamepadState.sThumbLX;
 	LeftAnalog.Y = gamepadState.sThumbLY;
-	buttonA = 0;
-	buttonB = 0;
-	buttonX = 0;
-	buttonY = 0;
+	rightButton = leftButton = buttonA = buttonB = buttonX = buttonY = 0;
+	
+	switch (gamepadState.wButtons)
+	{
+		case XINPUT_GAMEPAD_RIGHT_SHOULDER:
+			rightButton = gamepadState.wButtons;
+			break;
+		case XINPUT_GAMEPAD_LEFT_SHOULDER:
+			leftButton = gamepadState.wButtons;
+			break;
+		case XINPUT_GAMEPAD_A:
+			buttonA = gamepadState.wButtons;
+			break;
+		case XINPUT_GAMEPAD_B:
+			buttonB = gamepadState.wButtons;
+			break;
+		case XINPUT_GAMEPAD_X:
+			buttonX = gamepadState.wButtons;
+			break;
+		case XINPUT_GAMEPAD_Y:
+			buttonY = gamepadState.wButtons;
+			break;
+		default:
+			break;
+	}
 	_buttons = gamepadState.wButtons;
 }
 
@@ -49,7 +68,7 @@ ControllerMonitor::ControllerMonitor(int user)
 	
 }
 
-void::ControllerMonitor::startMonitor(void)
+void ControllerMonitor::startMonitor(void)
 {
 	getStateResult = XInputGetState(Users, &newControllerState);
 	//emit SIGNAL(ControllerUpdate(controller));

@@ -41,6 +41,6 @@ public:
 public slots:
 	void  startMonitor(void);
 signals:
-	void ControllerUpdate(Controller *newStates);
+	void ControllerUpdate(Controller *newGamepadStates);
 };
 

@@ -16,7 +16,7 @@
 class XboxControllerServer : public QMainWindow
 {
 	Q_OBJECT
-	QThread Listener;
+	QThread *Listener = Q_NULLPTR;
 
 public:
 	XboxControllerServer(QWidget *parent = Q_NULLPTR);
@@ -47,10 +47,19 @@ public:
 	//Bottom groupBox
 	QGroupBox *controls_status;
 	QHBoxLayout *controls_statusLayout;
+	QGroupBox *serverMode;
+	QVBoxLayout *serverModeLayout;
+	QGroupBox *controlServer;
+	QHBoxLayout *controlServerLayout;
 
 	//widgets
 	QPlainTextEdit *logBox;
-	QPushButton *testMe;
+	QPushButton *StartServer;
+	QPushButton *StopServer;
+	QComboBox *serverModeOptions;
+	QLabel *ServerConnected;
+	enum options {Server, MCU};
+	Q_ENUM(options);
 
 	//Labels and line Edit
 	QLabel *labelA;
@@ -73,7 +82,7 @@ public:
 
 	//Gamepad Listener
 	ControllerMonitor *gamepads;
-	bool controllerDefined;
+	bool controllerDefined = false;
 	int controllerRetries = 5;
 	int playerID = 0;
 	
@@ -83,18 +92,22 @@ public:
 	void initializeGUI(void);
 	void initializeClient(void);
 	void startListener(void);
+	void launchClient(void);
 	void closeEvent(QCloseEvent *event);
-	
+	int currentMode(void);
+	void updateButtonFields(Controller *newGamepadState);
+
 private:
-	TcpClient *Client;
+	TcpClient *Client = Q_NULLPTR;
 
 
 public slots:
 	void logSlot(QString message);
 	void startServer(void);
-	void handleNewState(Controller *newState);
+	void stopServer(void);
+	void handlenewGamepadState(Controller *newGamepadState);
 	void tcpResponseHandler(QString data);
-; signals:
+signals:
 	void logSignal(QString message);
 	void monitor(void);
 };

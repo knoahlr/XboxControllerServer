@@ -6,7 +6,6 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	XboxControllerServer w;
 	w.show();
-	w.initializeClient();
 	
 	return a.exec();
 }

@@ -6,9 +6,8 @@ XboxControllerServer::XboxControllerServer(QWidget *parent)
 	: QMainWindow(parent)
 {
 	initializeGUI();
-	initializeClient();
 }
-void::XboxControllerServer::initializeGUI(void)
+void XboxControllerServer::initializeGUI(void)
 {
 
 	//GUI
@@ -43,6 +42,14 @@ void::XboxControllerServer::initializeGUI(void)
 	controls_statusLayout = new QHBoxLayout();
 	controls_status->setLayout(controls_statusLayout);
 
+	serverMode = new QGroupBox("Mode");
+	serverModeLayout = new QVBoxLayout();
+	serverMode->setLayout(serverModeLayout);
+
+	controlServer = new QGroupBox("Server Control");
+	controlServerLayout = new QHBoxLayout();
+	controlServer->setLayout(controlServerLayout);
+
 
 	//Labels and line Edit
 	labelA = new QLabel("A");
@@ -66,12 +73,21 @@ void::XboxControllerServer::initializeGUI(void)
 	//
 	logBox = new QPlainTextEdit();
 	logBox->setReadOnly(true);
-	testMe = new QPushButton("Start Server");
+	StartServer = new QPushButton("Start Server");
+	StopServer = new QPushButton("Stop Server");
+
+	//serverMode
+	serverModeOptions = new QComboBox();
+	QStringList items;
+	items << QMetaEnum::fromType<options>().valueToKey(Server) << QMetaEnum::fromType<options>().valueToKey(MCU);
+	serverModeOptions->addItems(items);
+	ServerConnected = new QLabel("Disconnected");
+	ServerConnected->setAlignment(Qt::AlignCenter);
+	ServerConnected->setStyleSheet("QLabel { background-color : red; }");
 
 	gamepadLayout->addWidget(buttons);
 	gamepadLayout->addWidget(trigger_Analog);
 	gamepadLayout->addWidget(logGroupBox);
-	//gamepadLayout->addWidget(controls_status);
 
 	buttonsLayout->setWidget(0, QFormLayout::LabelRole, labelA);
 	buttonsLayout->setWidget(0, QFormLayout::FieldRole, lineEditA);
@@ -97,10 +113,18 @@ void::XboxControllerServer::initializeGUI(void)
 	trigger_AnalogLayout->setWidget(3, QFormLayout::LabelRole, labelRightAnalog);
 	trigger_AnalogLayout->setWidget(3, QFormLayout::FieldRole, lineEditRightAnalog);
 
-	logFrameLayout->addWidget(logBox);
-	controls_statusLayout->addWidget(testMe);
+	controlServerLayout->addWidget(StartServer);
+	controlServerLayout->addWidget(StopServer);
+	serverModeLayout->addWidget(serverModeOptions);
+	serverModeLayout->addWidget(ServerConnected);
 
-	connect(testMe, SIGNAL(clicked()), this, SLOT(startServer()));
+	logFrameLayout->addWidget(logBox);
+	controls_statusLayout->addWidget(controlServer);
+	controls_statusLayout->addWidget(serverMode);
+
+
+	connect(StartServer, SIGNAL(clicked()), this, SLOT(startServer()));
+	connect(StopServer, SIGNAL(clicked()), this, SLOT(stopServer()));
 
 	centralLayout->addWidget(gamepad);
 	centralLayout->addWidget(controls_status);
@@ -108,22 +132,27 @@ void::XboxControllerServer::initializeGUI(void)
 	centralWidget->setLayout(centralLayout);
 	setCentralWidget(centralWidget);
 	setStatusBar(statusBar);
-	resize(800, 500);
+	resize(800, 200);
 
 }
 
-void::XboxControllerServer::initializeClient(void)
+void XboxControllerServer::initializeClient(void)
 {
-	Client = new TcpClient();
-	connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
-	if (Client->connectToHost(mcuIP, 1000))
+	if (Client == Q_NULLPTR)
 	{
-		QString connected = QString("Connected");
-		Client->writeData(connected.toUtf8());
+		Client = new TcpClient();
+		connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
+		if (Client->connectToHost(mcuIP, 1000))
+		{
+			ServerConnected->setText("Connected");
+			ServerConnected->setStyleSheet("QLabel { background-color : Green; }");
+
+			QString connected = QString("Connected");
+			(Client == Q_NULLPTR) ? false : Client->writeData(connected.toUtf8());
+		}
 	}
-	
 }
-void::XboxControllerServer::startServer(void) {
+void XboxControllerServer::startServer(void) {
 
 	DWORD dwResult;
 	XINPUT_STATE state;
@@ -148,49 +177,127 @@ void::XboxControllerServer::startServer(void) {
 	logSlot(QString("No Controller connected to system"));
 }
 
-void::XboxControllerServer::logSlot(QString message)
+void XboxControllerServer::stopServer(void)
+{
+	if (Client != Q_NULLPTR)
+	{
+		Client->disconnect();
+		Client->deleteLater();
+		Client = Q_NULLPTR;
+		QApplication::processEvents();
+		
+	}
+	if (Listener != Q_NULLPTR)
+	{
+		Listener->exit();
+		try
+		{
+			if(!Listener->wait(3000))
+			{
+				Listener->terminate();
+				Listener->wait(3000);
+				//std::this_thread::sleep_for(3000ms);
+				controllerDefined = false;				
+				Listener = Q_NULLPTR;
+			}
+		}
+		catch (const std::exception& e)
+		{
+			logSlot(QString(e.what()));
+		}
+	}
+}
+
+void XboxControllerServer::logSlot(QString message)
 {
 
 	logBox->appendPlainText(message);
 
 }
-void::XboxControllerServer::startListener(void) 
+void XboxControllerServer::startListener(void) 
 {
-	if (!controllerDefined)
+	if (!controllerDefined && Listener == Q_NULLPTR)
 	{
+		Listener = new QThread(this);
 		gamepads = new ControllerMonitor(0);
-		gamepads->moveToThread(&Listener);
+		gamepads->moveToThread(Listener);
 		connect(this, SIGNAL(monitor()), gamepads, SLOT(startMonitor()));
-		connect(gamepads, SIGNAL(ControllerUpdate(Controller*)), this, SLOT(handleNewState(Controller *)));
-		Listener.start();
+		connect(gamepads, SIGNAL(ControllerUpdate(Controller*)), this, SLOT(handlenewGamepadState(Controller *)));
+		Listener->start();
 		controllerDefined = true;
 		emit monitor();
-		initializeClient();
+		
+		launchClient();
 	}
 	else 
 	{
 		logSlot("Controller already found");
+		Client == Q_NULLPTR ? launchClient() : false;
 	}
 
 }
 
-void::XboxControllerServer::handleNewState(Controller *newState)
+void XboxControllerServer::launchClient(void)
 {
-	logSlot(QString("Right Analog: %1, %2\nLeft Analog: %3, %4\nRight Trigger: %5 Left Trigger: %6\nButtons: %7")\
-	.arg(QString::number(newState->RightAnalog.X), QString::number(newState->RightAnalog.Y),\
-		QString::number(newState->LeftAnalog.X), QString::number(newState->LeftAnalog.Y),
-		QString::number(newState->RightTrigger), QString::number(newState->LeftTrigger),
-		QString::number(newState->_buttons)
-		));
+	options selectedCase = (options)currentMode();
+	switch (selectedCase)
+	{
+	case MCU:
+		initializeClient();
+		break;
+	case Server:
+		break;
+	}
 }
 
-void::XboxControllerServer::tcpResponseHandler(QString data)
+void XboxControllerServer::handlenewGamepadState(Controller *newGamepadState)
+{
+	options selectedCase = (options)currentMode();
+	QString message = QString("Right Analog: %1, %2\nLeft Analog: %3, %4\nRight Trigger: %5 Left Trigger: %6\nButtons: %7")\
+		.arg(QString::number(newGamepadState->RightAnalog.X), QString::number(newGamepadState->RightAnalog.Y), \
+			QString::number(newGamepadState->LeftAnalog.X), QString::number(newGamepadState->LeftAnalog.Y),
+			QString::number(newGamepadState->RightTrigger), QString::number(newGamepadState->LeftTrigger),
+			QString::number(newGamepadState->_buttons));
+	updateButtonFields(newGamepadState);
+	switch (selectedCase)
+	{
+		case Server:
+			logSlot(message);
+			break;
+		case MCU:
+			(Client == Q_NULLPTR) ? launchClient() : Client->writeData(message.toUtf8());
+			break;
+		default:
+			logSlot("Switch Case Failed");
+			break;
+	}
+}
+int XboxControllerServer::currentMode(void)
+{
+	QString selectedText = serverModeOptions->itemText(serverModeOptions->currentIndex());
+	auto metaEnum = QMetaEnum::fromType<options>();
+	return (options)metaEnum.keyToValue(selectedText.toLocal8Bit().data());
+}
+
+void XboxControllerServer::tcpResponseHandler(QString data)
 {
 	logSlot(data);
 }
-void::XboxControllerServer::closeEvent(QCloseEvent *event)
+void XboxControllerServer::closeEvent(QCloseEvent *event)
 {
-	Listener.quit();
+	stopServer();
+	QMainWindow::closeEvent(event);
 }
 
+void XboxControllerServer::updateButtonFields(Controller *newGamepadState)
+{
+	lineEditA->setText(QString::number(newGamepadState->buttonA));
+	lineEditB->setText(QString::number(newGamepadState->buttonB));
+	lineEditX->setText(QString::number(newGamepadState->buttonX));
+	lineEditY->setText(QString::number(newGamepadState->buttonY));
+	lineEditLeftTrigger->setText(QString::number(newGamepadState->LeftTrigger));
+	lineEditRightAnalog->setText(QString("%1, %2").arg(QString::number(newGamepadState->RightAnalog.X), QString::number(newGamepadState->RightAnalog.Y)));
+	lineEditLeftAnalog->setText(QString("%1, %2").arg(QString::number(newGamepadState->LeftAnalog.X), QString::number(newGamepadState->LeftAnalog.Y)));
+	lineEditRightTrigger->setText(QString::number(newGamepadState->RightTrigger));
+}
 
