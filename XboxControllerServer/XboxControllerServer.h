@@ -17,6 +17,7 @@ class XboxControllerServer : public QMainWindow
 {
 	Q_OBJECT
 	QThread *Listener = Q_NULLPTR;
+	QThread *clientManager = Q_NULLPTR;
 
 public:
 	XboxControllerServer(QWidget *parent = Q_NULLPTR);
@@ -110,4 +111,5 @@ public slots:
 signals:
 	void logSignal(QString message);
 	void monitor(void);
+	void tryConnect(QString Ip, int port);
 };

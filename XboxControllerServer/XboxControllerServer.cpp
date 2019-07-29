@@ -140,9 +140,17 @@ void XboxControllerServer::initializeClient(void)
 {
 	if (Client == Q_NULLPTR)
 	{
+		clientManager = new QThread(this);
+
 		Client = new TcpClient();
+		Client->moveToThread(clientManager);
 		connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
-		if (Client->connectToHost(mcuIP, 1000))
+		//connect(this, SIGNAL(tryConnect(QString, int)), Client, SLOT(connectToHost(QString, int)));
+
+		clientManager->start();
+		//emit tryConnect(mcuIP, 1000);
+		
+		if (Client->connectToHost("127.0.0.1", 1000))
 		{
 			ServerConnected->setText("Connected");
 			ServerConnected->setStyleSheet("QLabel { background-color : Green; }");
@@ -175,6 +183,7 @@ void XboxControllerServer::startServer(void) {
 		}
 	}
 	logSlot(QString("No Controller connected to system"));
+	startListener(); //TODO: debug only
 }
 
 void XboxControllerServer::stopServer(void)
