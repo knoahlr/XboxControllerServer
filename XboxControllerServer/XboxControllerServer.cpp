@@ -39,7 +39,7 @@ void XboxControllerServer::initializeGUI(void)
 
 	//Bottom control and status groupbox
 	controls_status = new QGroupBox();
-	controls_statusLayout = new QHBoxLayout();
+	controls_statusLayout = new QGridLayout();
 	controls_status->setLayout(controls_statusLayout);
 
 	serverMode = new QGroupBox("Mode");
@@ -60,6 +60,8 @@ void XboxControllerServer::initializeGUI(void)
 	labelRightAnalog = new QLabel("Right Analog");
 	labelLeftAnalog = new QLabel("Left Analog");
 	labelRightTrigger = new QLabel("Right Trigger");
+	ipLabel = new QLabel("IP");
+	portLabel = new QLabel("Port");
 
 	lineEditA = new QLineEdit();
 	lineEditB = new QLineEdit();
@@ -69,6 +71,8 @@ void XboxControllerServer::initializeGUI(void)
 	lineEditRightAnalog = new QLineEdit();
 	lineEditLeftAnalog = new QLineEdit();
 	lineEditRightTrigger = new QLineEdit();
+	ipLineEdit = new QLineEdit();
+	portLineEdit = new QLineEdit();
 
 	//
 	logBox = new QPlainTextEdit();
@@ -79,7 +83,10 @@ void XboxControllerServer::initializeGUI(void)
 	//serverMode
 	serverModeOptions = new QComboBox();
 	QStringList items;
-	items << QMetaEnum::fromType<options>().valueToKey(Server) << QMetaEnum::fromType<options>().valueToKey(MCU);
+	items << QMetaEnum::fromType<options>().valueToKey(Server) 
+		<< QMetaEnum::fromType<options>().valueToKey(MCU) 
+		<< QMetaEnum::fromType<options>().valueToKey(Debug);
+
 	serverModeOptions->addItems(items);
 	ServerConnected = new QLabel("Disconnected");
 	ServerConnected->setAlignment(Qt::AlignCenter);
@@ -119,8 +126,12 @@ void XboxControllerServer::initializeGUI(void)
 	serverModeLayout->addWidget(ServerConnected);
 
 	logFrameLayout->addWidget(logBox);
-	controls_statusLayout->addWidget(controlServer);
-	controls_statusLayout->addWidget(serverMode);
+	controls_statusLayout->addWidget(ipLabel, 0, 0);
+	controls_statusLayout->addWidget(ipLineEdit, 0, 1);
+	controls_statusLayout->addWidget(portLabel, 0, 2);
+	controls_statusLayout->addWidget(portLineEdit, 0, 3);
+	controls_statusLayout->addWidget(controlServer, 1, 0,1,2);
+	controls_statusLayout->addWidget(serverMode, 1,2,1,2);
 
 
 	connect(StartServer, SIGNAL(clicked()), this, SLOT(startServer()));
@@ -132,7 +143,7 @@ void XboxControllerServer::initializeGUI(void)
 	centralWidget->setLayout(centralLayout);
 	setCentralWidget(centralWidget);
 	setStatusBar(statusBar);
-	resize(800, 200);
+	resize(500, 500);
 
 }
 
@@ -157,25 +168,34 @@ void XboxControllerServer::startServer(void) {
 
 	DWORD dwResult;
 	XINPUT_STATE state;
+	options selectedCase = (options)currentMode();
 
-	for (int retries = 0; retries <= controllerRetries; retries ++)
+	switch (selectedCase)
 	{
-		ZeroMemory(&state, sizeof(XINPUT_STATE));
-		// Simply get the state of the controller from XInput.
-		dwResult = XInputGetState(playerID, &state);
-		if (dwResult == ERROR_SUCCESS)
-		{
+		case MCU:
+		case Server:
+			for (int retries = 0; retries <= controllerRetries; retries++)
+			{
+				ZeroMemory(&state, sizeof(XINPUT_STATE));
+				// Simply get the state of the controller from XInput.
+				dwResult = XInputGetState(playerID, &state);
+				if (dwResult == ERROR_SUCCESS)
+				{
+					startListener();
+					return;
+				}
+				else
+				{
+					logSlot(QString("Controller not found. Waiting 2s"));
+					std::this_thread::sleep_for(2s);
+					QApplication::processEvents();
+				}
+			}
+			logSlot(QString("No Controller connected to system"));
+		case Debug:
 			startListener();
 			return;
-		}
-		else 
-		{
-			logSlot(QString("Controller not found. Waiting 2s"));
-			std::this_thread::sleep_for(2s);
-			QApplication::processEvents();
-		}
 	}
-	logSlot(QString("No Controller connected to system"));
 }
 
 void XboxControllerServer::stopServer(void)
@@ -219,7 +239,6 @@ void XboxControllerServer::stopServer(void)
 			{
 				Listener->terminate();
 				Listener->wait(3000);
-				//std::this_thread::sleep_for(3000ms);
 				controllerDefined = false;				
 				Listener = Q_NULLPTR;
 			}

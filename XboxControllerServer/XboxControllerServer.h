@@ -47,7 +47,7 @@ public:
 	
 	//Bottom groupBox
 	QGroupBox *controls_status;
-	QHBoxLayout *controls_statusLayout;
+	QGridLayout *controls_statusLayout;
 	QGroupBox *serverMode;
 	QVBoxLayout *serverModeLayout;
 	QGroupBox *controlServer;
@@ -59,7 +59,7 @@ public:
 	QPushButton *StopServer;
 	QComboBox *serverModeOptions;
 	QLabel *ServerConnected;
-	enum options {Server, MCU};
+	enum options {Server, MCU, Debug};
 	Q_ENUM(options);
 
 	//Labels and line Edit
@@ -71,6 +71,8 @@ public:
 	QLabel *labelRightAnalog;
 	QLabel *labelLeftAnalog;
 	QLabel *labelRightTrigger;
+	QLabel *ipLabel;
+	QLabel *portLabel;
 
 	QLineEdit *lineEditA;
 	QLineEdit *lineEditB;
@@ -80,6 +82,8 @@ public:
 	QLineEdit *lineEditRightAnalog;
 	QLineEdit *lineEditLeftAnalog;
 	QLineEdit *lineEditRightTrigger;
+	QLineEdit *ipLineEdit;
+	QLineEdit *portLineEdit;
 
 	//Gamepad Listener
 	ControllerMonitor *gamepads;
