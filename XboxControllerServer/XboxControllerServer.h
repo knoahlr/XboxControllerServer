@@ -108,8 +108,13 @@ public slots:
 	void stopServer(void);
 	void handlenewGamepadState(Controller *newGamepadState);
 	void tcpResponseHandler(QString data);
+	void connectionUpdate(bool connected);
+
 signals:
 	void logSignal(QString message);
 	void monitor(void);
+	
+	//TCP Client Signals
 	void tryConnect(QString Ip, int port);
+	void sendData(QByteArray data);
 };

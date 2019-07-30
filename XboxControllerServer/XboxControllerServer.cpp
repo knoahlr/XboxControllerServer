@@ -145,19 +145,12 @@ void XboxControllerServer::initializeClient(void)
 		Client = new TcpClient();
 		Client->moveToThread(clientManager);
 		connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
-		//connect(this, SIGNAL(tryConnect(QString, int)), Client, SLOT(connectToHost(QString, int)));
-
+		connect(Client, SIGNAL(deviceStateUpdate(bool)), this, SLOT(connectionUpdate(bool)));
+		connect(this, SIGNAL(tryConnect(QString, int)), Client, SLOT(connectToHost(QString, int)));
+		connect(this, SIGNAL(sendData(QByteArray)), Client, SLOT(writeData(QByteArray)));
 		clientManager->start();
-		//emit tryConnect(mcuIP, 1000);
-		
-		if (Client->connectToHost("127.0.0.1", 1000))
-		{
-			ServerConnected->setText("Connected");
-			ServerConnected->setStyleSheet("QLabel { background-color : Green; }");
-
-			QString connected = QString("Connected");
-			(Client == Q_NULLPTR) ? false : Client->writeData(connected.toUtf8());
-		}
+		emit tryConnect(mcuIP, 1000);
+	
 	}
 }
 void XboxControllerServer::startServer(void) {
@@ -183,7 +176,6 @@ void XboxControllerServer::startServer(void) {
 		}
 	}
 	logSlot(QString("No Controller connected to system"));
-	startListener(); //TODO: debug only
 }
 
 void XboxControllerServer::stopServer(void)
@@ -194,8 +186,30 @@ void XboxControllerServer::stopServer(void)
 		Client->deleteLater();
 		Client = Q_NULLPTR;
 		QApplication::processEvents();
-		
+		connectionUpdate(false);
+
+		//TODO: Add Status Bar Updater
+		if (clientManager != Q_NULLPTR)
+		{
+			clientManager->exit();
+			try
+			{
+				if (!clientManager->wait(3000))
+				{
+					clientManager->terminate();
+					clientManager->wait(3000);
+					//std::this_thread::sleep_for(3000ms);
+					controllerDefined = false;
+					clientManager = Q_NULLPTR;
+				}
+			}
+			catch (const std::exception& e)
+			{
+				logSlot(QString(e.what()));
+			}
+		}
 	}
+	//TODO: Add Status Bar Updater
 	if (Listener != Q_NULLPTR)
 	{
 		Listener->exit();
@@ -274,7 +288,7 @@ void XboxControllerServer::handlenewGamepadState(Controller *newGamepadState)
 			logSlot(message);
 			break;
 		case MCU:
-			(Client == Q_NULLPTR) ? launchClient() : Client->writeData(message.toUtf8());
+			(Client == Q_NULLPTR) ? false : emit sendData(message.toUtf8());
 			break;
 		default:
 			logSlot("Switch Case Failed");
@@ -310,3 +324,17 @@ void XboxControllerServer::updateButtonFields(Controller *newGamepadState)
 	lineEditRightTrigger->setText(QString::number(newGamepadState->RightTrigger));
 }
 
+void XboxControllerServer::connectionUpdate(bool connected)
+{
+	if (connected)
+	{
+		ServerConnected->setText("Connected");
+		ServerConnected->setStyleSheet("QLabel { background-color : Green; }");
+	}
+	else if(!connected)
+	{
+		ServerConnected->setText("Disconnected");
+		ServerConnected->setStyleSheet("QLabel { background-color : Red; }");
+	}
+
+}

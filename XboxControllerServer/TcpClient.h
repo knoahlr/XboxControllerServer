@@ -15,11 +15,12 @@ public:
 	explicit TcpClient(QObject *parent = 0);
 
 public slots:
-	bool connectToHost(QString host, int port);
-	bool writeData(QByteArray data);
+	void connectToHost(QString host, int port);
+	void writeData(QByteArray data);
 	void tcpResponse(void);
 signals:
 	void transactionComplete(QString data);
+	void deviceStateUpdate(bool connected);
 
 private:
 	//TCP Transmitter and Receiver
