@@ -2,8 +2,10 @@
 
 static inline QByteArray IntToArray(qint32 source);
 using namespace std::chrono_literals;
-TcpClient::TcpClient(QObject *parent) : QObject(parent)
+TcpClient::TcpClient(QString Ip, int Port) : QObject()
 {
+	tcpClientConfig.Ip = Ip;
+	tcpClientConfig.Port = Port;
 	Transmitter = new QTcpSocket(this);
 	QByteArray *buffer = new QByteArray();
 	qint32 *transmitterSize = new qint32(0);
@@ -13,11 +15,11 @@ TcpClient::TcpClient(QObject *parent) : QObject(parent)
 
 }
 
-void TcpClient::connectToHost(QString host, int port)
+void TcpClient::connectToHost(void)
 {
 	if (readWriteMutex.tryLock(10000))
 	{
-		Transmitter->connectToHost(host, port);
+		Transmitter->connectToHost(tcpClientConfig.Ip, tcpClientConfig.Port);
 		if (Transmitter->waitForConnected())
 		{
 			emit deviceStateUpdate(true);
@@ -40,7 +42,7 @@ void TcpClient::writeData(QByteArray data)
 	}
 	else 
 	{
-		return connectToHost("192.168.91.112", 1000);
+		return connectToHost();
 	}
 }
 

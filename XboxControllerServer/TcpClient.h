@@ -12,12 +12,18 @@ class TcpClient : public QObject
 	Q_OBJECT
 
 public:
-	explicit TcpClient(QObject *parent = 0);
+	explicit TcpClient(QString Ip, int Port);
+	struct Config {
+		QString Ip;
+		int Port;
+	};
+	Config tcpClientConfig;
 
 public slots:
-	void connectToHost(QString host, int port);
+	void connectToHost(void);
 	void writeData(QByteArray data);
 	void tcpResponse(void);
+
 signals:
 	void transactionComplete(QString data);
 	void deviceStateUpdate(bool connected);
@@ -26,7 +32,6 @@ private:
 	//TCP Transmitter and Receiver
 	QTcpSocket *Transmitter;
 	QTcpSocket *Receiver;
-	//QDataStream inBuffer;
 	QString currentResponse;
 	QHash<QTcpSocket*, QByteArray*> inBuffers;
 	QHash<QTcpSocket*, qint32 *> clientSizes;

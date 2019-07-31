@@ -73,6 +73,8 @@ void XboxControllerServer::initializeGUI(void)
 	lineEditRightTrigger = new QLineEdit();
 	ipLineEdit = new QLineEdit();
 	portLineEdit = new QLineEdit();
+	ipLineEdit->setText("192.168.91.112");
+	portLineEdit->setText("1000");
 
 	//
 	logBox = new QPlainTextEdit();
@@ -151,16 +153,18 @@ void XboxControllerServer::initializeClient(void)
 {
 	if (Client == Q_NULLPTR)
 	{
-		clientManager = new QThread(this);
+		QString ip = ipLineEdit->text();
+		int port = portLineEdit->text().toInt();
 
-		Client = new TcpClient();
+		clientManager = new QThread(this);
+		Client = new TcpClient(ip, port);
 		Client->moveToThread(clientManager);
 		connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
 		connect(Client, SIGNAL(deviceStateUpdate(bool)), this, SLOT(connectionUpdate(bool)));
 		connect(this, SIGNAL(tryConnect(QString, int)), Client, SLOT(connectToHost(QString, int)));
 		connect(this, SIGNAL(sendData(QByteArray)), Client, SLOT(writeData(QByteArray)));
 		clientManager->start();
-		emit tryConnect(mcuIP, 1000);
+		emit tryConnect();
 	
 	}
 }

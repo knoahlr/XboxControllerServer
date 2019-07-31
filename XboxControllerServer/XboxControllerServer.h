@@ -21,7 +21,7 @@ class XboxControllerServer : public QMainWindow
 
 public:
 	XboxControllerServer(QWidget *parent = Q_NULLPTR);
-
+#pragma region GUI
 	// GUI
 	QWidget *centralWidget;
 	QVBoxLayout *centralLayout;
@@ -84,15 +84,13 @@ public:
 	QLineEdit *lineEditRightTrigger;
 	QLineEdit *ipLineEdit;
 	QLineEdit *portLineEdit;
+#pragma endregion GUI
 
 	//Gamepad Listener
 	ControllerMonitor *gamepads;
 	bool controllerDefined = false;
 	int controllerRetries = 5;
 	int playerID = 0;
-	
-	//MCU
-	QString mcuIP = "192.168.91.112";
 
 	void initializeGUI(void);
 	void initializeClient(void);
@@ -119,6 +117,6 @@ signals:
 	void monitor(void);
 	
 	//TCP Client Signals
-	void tryConnect(QString Ip, int port);
+	void tryConnect();
 	void sendData(QByteArray data);
 };
