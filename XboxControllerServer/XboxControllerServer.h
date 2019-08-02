@@ -2,15 +2,15 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QtGui>
-#include <QtWidgets>
+
 #include <QHBoxLayout> 
 #include "StatusBar.h"
-#include <QtGamepad/qgamepad.h>
-#include <qglobal.h>
+
 #include <QtCore/qlogging.h>
 #include <QMessageLogger>
 //#include <Xinput.h>
 #include "ControllerMonitor.h"
+#include "ServerWidget.h"
 #include "TcpClient.h"
 
 class XboxControllerServer : public QMainWindow
@@ -29,65 +29,9 @@ public:
 	DefaultStatusBar *statusBar;
 
 	//TABS
-	QTabWidget *serverTab;
-	QTabWidget *VideoIO;
+	QTabWidget *Tabs;
+	ServerWidget *serverTab = Q_NULLPTR;
 
-	//Top GroupBox
-	QGroupBox *gamepad;
-	QHBoxLayout *gamepadLayout;
-
-	//Left Pane Box
-	QGroupBox *buttons;
-	QFormLayout *buttonsLayout;
-
-	//Right Pane Box
-	QGroupBox *trigger_Analog;
-	QFormLayout *trigger_AnalogLayout;
-
-	//Middle Log groupBox
-	QGroupBox *logGroupBox;
-	QVBoxLayout *logFrameLayout;
-	
-	
-	//Bottom groupBox
-	QGroupBox *controls_status;
-	QGridLayout *controls_statusLayout;
-	QGroupBox *serverMode;
-	QVBoxLayout *serverModeLayout;
-	QGroupBox *controlServer;
-	QHBoxLayout *controlServerLayout;
-
-	//widgets
-	QPlainTextEdit *logBox;
-	QPushButton *StartServer;
-	QPushButton *StopServer;
-	QComboBox *serverModeOptions;
-	QLabel *ServerConnected;
-	enum options {Server, MCU, Debug};
-	Q_ENUM(options);
-
-	//Labels and line Edit
-	QLabel *labelA;
-	QLabel *labelB;
-	QLabel *labelX;
-	QLabel *labelY;
-	QLabel *labelLeftTrigger;
-	QLabel *labelRightAnalog;
-	QLabel *labelLeftAnalog;
-	QLabel *labelRightTrigger;
-	QLabel *ipLabel;
-	QLabel *portLabel;
-
-	QLineEdit *lineEditA;
-	QLineEdit *lineEditB;
-	QLineEdit *lineEditX;
-	QLineEdit *lineEditY;
-	QLineEdit *lineEditLeftTrigger;
-	QLineEdit *lineEditRightAnalog;
-	QLineEdit *lineEditLeftAnalog;
-	QLineEdit *lineEditRightTrigger;
-	QLineEdit *ipLineEdit;
-	QLineEdit *portLineEdit;
 #pragma endregion GUI
 
 	//Gamepad Listener
@@ -126,7 +70,4 @@ signals:
 };
 
 
-
-class serverWidget(const QFileInfo &fileInfo, QWidget *parent)
-	: QWidget(parent)
 

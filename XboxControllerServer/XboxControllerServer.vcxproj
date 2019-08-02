@@ -115,6 +115,7 @@
   <ItemGroup>
     <ClCompile Include="ControllerMonitor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ServerWidget.cpp" />
     <ClCompile Include="StatusBar.cpp" />
     <ClCompile Include="TcpClient.cpp" />
     <ClCompile Include="XboxControllerServer.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="TcpClient.h" />
+    <QtMoc Include="ServerWidget.h" />
     <ClInclude Include="StatusBar.h" />
   </ItemGroup>
   <ItemGroup>

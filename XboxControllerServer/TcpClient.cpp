@@ -22,6 +22,7 @@ void TcpClient::connectToHost(void)
 		Transmitter->connectToHost(tcpClientConfig.Ip, tcpClientConfig.Port);
 		if (Transmitter->waitForConnected())
 		{
+			writeData(QString("Connected").toUtf8());
 			emit deviceStateUpdate(true);
 		}
 	}
