@@ -12,6 +12,7 @@ void XboxControllerServer::initializeGUI(void)
 
 	//GUI
 	centralWidget = new QWidget();
+
 	centralLayout = new QVBoxLayout();
 	Icon = new QIcon("../Articles/atom.png");
 	setWindowIcon(*Icon);

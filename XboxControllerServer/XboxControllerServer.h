@@ -28,6 +28,10 @@ public:
 	QIcon *Icon;
 	DefaultStatusBar *statusBar;
 
+	//TABS
+	QTabWidget *serverTab;
+	QTabWidget *VideoIO;
+
 	//Top GroupBox
 	QGroupBox *gamepad;
 	QHBoxLayout *gamepadLayout;
@@ -120,3 +124,9 @@ signals:
 	void tryConnect();
 	void sendData(QByteArray data);
 };
+
+
+
+class serverWidget(const QFileInfo &fileInfo, QWidget *parent)
+	: QWidget(parent)
+
