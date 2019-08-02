@@ -45,7 +45,7 @@ void XboxControllerServer::initializeClient(void)
 		Client->moveToThread(clientManager);
 		connect(Client, SIGNAL(transactionComplete(QString)), this, SLOT(tcpResponseHandler(QString)));
 		connect(Client, SIGNAL(deviceStateUpdate(bool)), this, SLOT(connectionUpdate(bool)));
-		connect(this, SIGNAL(tryConnect(QString, int)), Client, SLOT(connectToHost(QString, int)));
+		connect(this, SIGNAL(tryConnect(void)), Client, SLOT(connectToHost(void)));
 		connect(this, SIGNAL(sendData(QByteArray)), Client, SLOT(writeData(QByteArray)));
 		clientManager->start();
 		emit tryConnect();

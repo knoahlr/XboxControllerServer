@@ -65,7 +65,7 @@ signals:
 	void monitor(void);
 	
 	//TCP Client Signals
-	void tryConnect();
+	void tryConnect(void);
 	void sendData(QByteArray data);
 };
 
