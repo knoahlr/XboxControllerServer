@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_2F7D507CA36F4F83B124C0E3BDA5B34E"
+        "MsmKey" = "8:_547EB1740F424980A4DE31834693910D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -50,6 +50,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
         "Release"
@@ -104,9 +112,9 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2F7D507CA36F4F83B124C0E3BDA5B34E"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_547EB1740F424980A4DE31834693910D"
             {
-            "SourcePath" = "8:..\\..\\IpMonitor_Cpp\\Articles\\atom.ico"
+            "SourcePath" = "8:..\\Articles\\atom.ico"
             "TargetName" = "8:atom.ico"
             "Tag" = "8:"
             "Folder" = "8:_5C773C323B4142B1A809EB02DFAF6AE5"
@@ -143,7 +151,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_5C773C323B4142B1A809EB02DFAF6AE5"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -181,7 +189,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:XboxServerSetup"
         "ProductCode" = "8:{06672044-EEDA-4DB2-A155-2BBB1BE62AB8}"
-        "PackageCode" = "8:{2B9035B7-2D5D-4D77-A0FE-A93FBA274C44}"
+        "PackageCode" = "8:{6C0657AD-7E4E-4ABB-BDE0-67C1DC2637C6}"
         "UpgradeCode" = "8:{A37992DC-8ACA-4101-81AF-1901DB3FB97C}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -202,7 +210,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -312,7 +320,7 @@
             "Target" = "8:_0464CECCF56C4B46A32048A5C6144080"
             "Folder" = "8:_07F4B59B28214A40828942EFB3C7B787"
             "WorkingFolder" = "8:_5C773C323B4142B1A809EB02DFAF6AE5"
-            "Icon" = "8:_2F7D507CA36F4F83B124C0E3BDA5B34E"
+            "Icon" = "8:_547EB1740F424980A4DE31834693910D"
             "Feature" = "8:"
             }
         }

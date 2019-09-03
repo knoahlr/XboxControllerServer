@@ -7,6 +7,7 @@ XboxControllerServer::XboxControllerServer(QWidget *parent)
 {
 	initializeGUI();
 }
+
 void XboxControllerServer::initializeGUI(void)
 {
 
@@ -70,6 +71,7 @@ void XboxControllerServer::createTrayIcon()
 	trayIcon->setVisible(true);
 	trayIcon->setContextMenu(trayIconMenu);
 }
+
 void XboxControllerServer::createActions()
 {
 	minimizeAction = new QAction(tr("Mi&nimize"), this);
@@ -177,6 +179,7 @@ void XboxControllerServer::logSlot(QString message)
 	serverTab->logBox->appendPlainText(message);
 
 }
+
 void XboxControllerServer::startListener(void) 
 {
 	if (!controllerDefined && Listener == Q_NULLPTR)
@@ -272,7 +275,7 @@ void XboxControllerServer::closeEvent(QCloseEvent *event)
 {
 	if (trayIcon->isVisible()) 
 	{
-		QMessageBox::information(this, tr("Systray"),
+		QMessageBox::information(this, tr("QUIT"),
 			tr("The program will keep running in the "
 				"system tray. To terminate the program, "
 				"choose <b>Quit</b> in the context menu "
