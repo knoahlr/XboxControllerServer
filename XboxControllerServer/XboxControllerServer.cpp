@@ -12,19 +12,22 @@ void XboxControllerServer::initializeGUI(void)
 
 	//GUI
 	centralWidget = new QWidget();
-
+	Icon = new QIcon(":/XboxControllerServer/Resources/atom.png");
 	centralLayout = new QVBoxLayout();
-	Icon = new QIcon("../Articles/atom.png");
-	setWindowIcon(*Icon);
 	statusBar = new DefaultStatusBar();
 
 	Tabs = new QTabWidget();
-
 	serverTab = new ServerWidget();
+	
+	createActions();
+	createTrayIcon();
 
-	Tabs->addTab(serverTab, tr("serverWidget"));
+	Tabs->addTab(serverTab, tr("Server Widget"));
 	connect(serverTab->StartServer, SIGNAL(clicked()), this, SLOT(startServer()));
 	connect(serverTab->StopServer, SIGNAL(clicked()), this, SLOT(stopServer()));
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+		this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
 	centralLayout->addWidget(Tabs);
 	centralWidget->setLayout(centralLayout);
 	setCentralWidget(centralWidget);
@@ -52,6 +55,36 @@ void XboxControllerServer::initializeClient(void)
 	
 	}
 }
+
+void XboxControllerServer::createTrayIcon()
+{
+	trayIconMenu = new QMenu(this);
+	trayIconMenu->addAction(minimizeAction);
+	trayIconMenu->addAction(maximizeAction);
+	trayIconMenu->addAction(restoreAction);
+	trayIconMenu->addSeparator();
+	trayIconMenu->addAction(quitAction);
+
+	trayIcon = new QSystemTrayIcon(this);
+	trayIcon->setIcon(*Icon);
+	trayIcon->setVisible(true);
+	trayIcon->setContextMenu(trayIconMenu);
+}
+void XboxControllerServer::createActions()
+{
+	minimizeAction = new QAction(tr("Mi&nimize"), this);
+	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+	maximizeAction = new QAction(tr("Ma&ximize"), this);
+	connect(maximizeAction, SIGNAL(triggered()), this, SLOT(showMaximized()));
+
+	restoreAction = new QAction(tr("&Restore"), this);
+	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+	quitAction = new QAction(tr("&Quit"), this);
+	bool dummy = connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
+
 void XboxControllerServer::startServer(void) {
 
 	DWORD dwResult;
@@ -80,7 +113,6 @@ void XboxControllerServer::startServer(void) {
 				}
 			}
 			logSlot(QString("No Controller connected to system"));
-			startListener();
 		case ServerWidget::Debug:
 			startListener();
 			return;
@@ -208,11 +240,6 @@ void XboxControllerServer::tcpResponseHandler(QString data)
 {
 	logSlot(data);
 }
-void XboxControllerServer::closeEvent(QCloseEvent *event)
-{
-	stopServer();
-	QMainWindow::closeEvent(event);
-}
 
 void XboxControllerServer::updateButtonFields(Controller *newGamepadState)
 {
@@ -240,5 +267,25 @@ void XboxControllerServer::connectionUpdate(bool connected)
 	}
 
 }
+
+void XboxControllerServer::closeEvent(QCloseEvent *event)
+{
+	if (trayIcon->isVisible()) 
+	{
+		QMessageBox::information(this, tr("Systray"),
+			tr("The program will keep running in the "
+				"system tray. To terminate the program, "
+				"choose <b>Quit</b> in the context menu "
+				"of the system tray entry."));
+		hide();
+		event->ignore();
+	}
+	else //currently not called. Need a way to tie action to QCloseEvent signal
+	{
+		stopServer();
+	}
+}
+
+
 
 

@@ -27,10 +27,18 @@ public:
 	QVBoxLayout *centralLayout;
 	QIcon *Icon;
 	DefaultStatusBar *statusBar;
+	QSystemTrayIcon *trayIcon;
+	QMenu *trayIconMenu;
 
 	//TABS
 	QTabWidget *Tabs;
 	ServerWidget *serverTab = Q_NULLPTR;
+
+	//Actions
+	QAction *minimizeAction;
+	QAction *maximizeAction;
+	QAction *restoreAction;
+	QAction *quitAction;
 
 #pragma endregion GUI
 
@@ -44,7 +52,8 @@ public:
 	void initializeClient(void);
 	void startListener(void);
 	void launchClient(void);
-	void closeEvent(QCloseEvent *event);
+	void createTrayIcon();
+	void createActions();
 	int currentMode(void);
 	void updateButtonFields(Controller *newGamepadState);
 
@@ -58,6 +67,7 @@ public slots:
 	void stopServer(void);
 	void handlenewGamepadState(Controller *newGamepadState);
 	void tcpResponseHandler(QString data);
+	void closeEvent(QCloseEvent *event);
 	void connectionUpdate(bool connected);
 
 signals:

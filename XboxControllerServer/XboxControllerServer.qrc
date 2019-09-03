@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="XboxControllerServer">
+    <qresource prefix="/XboxControllerServer">
+        <file>Resources/atom.ico</file>
+        <file>Resources/atom.png</file>
     </qresource>
 </RCC>
