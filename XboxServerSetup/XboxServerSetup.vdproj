@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_547EB1740F424980A4DE31834693910D"
+        "MsmKey" = "8:_0D12438321064EC3890A2AF4DB5B4C84"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -112,9 +112,9 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_547EB1740F424980A4DE31834693910D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0D12438321064EC3890A2AF4DB5B4C84"
             {
-            "SourcePath" = "8:..\\Articles\\atom.ico"
+            "SourcePath" = "8:..\\XboxControllerServer\\Articles\\atom.ico"
             "TargetName" = "8:atom.ico"
             "Tag" = "8:"
             "Folder" = "8:_5C773C323B4142B1A809EB02DFAF6AE5"
@@ -320,7 +320,7 @@
             "Target" = "8:_0464CECCF56C4B46A32048A5C6144080"
             "Folder" = "8:_07F4B59B28214A40828942EFB3C7B787"
             "WorkingFolder" = "8:_5C773C323B4142B1A809EB02DFAF6AE5"
-            "Icon" = "8:_547EB1740F424980A4DE31834693910D"
+            "Icon" = "8:_0D12438321064EC3890A2AF4DB5B4C84"
             "Feature" = "8:"
             }
         }

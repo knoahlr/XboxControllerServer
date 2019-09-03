@@ -8,5 +8,5 @@ Built using Qt Framework and Visual C++
 ## Usage
 Enter Ip and Port then Start Server
 
-![Figure1](Articles/mainWindow.png)
+![Figure1](XboxControllerServer/Articles/mainWindow.png)
 
